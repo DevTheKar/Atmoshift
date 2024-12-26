@@ -17,4 +17,3 @@ Prolly making it a .exe soon.
 - [ ] Add time-based wallpapers (morning, afternoon, night).  
 - [ ] Explore support for animated GIF wallpapers.  
 - [ ] Automate weather updates every 30 minutes.  
-- [ ] Improve user configuration options.  

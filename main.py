@@ -3,61 +3,65 @@ import requests
 from pathlib import Path
 import geocoder
 
-# Get user location dynamically
-def get_location():
-    g = geocoder.ip('me')
-    if g.ok:
-        return g.city
-    return 'London'
+# Get the user's location based on IP address
+def get_user_location():
+    location = geocoder.ip('me')
+    return location.city if location.ok else 'london'  # Default to 'london'
 
 # Configuration
-CITY = get_location()  # Use dynamic location
-WALLPAPER_DIR = Path(__file__).parent / 'wallpapers'  # Use wallpapers folder in the same directory
+city = get_user_location()
+wallpaper_dir = Path(__file__).parent / 'wallpapers'
 
-# Weather condition to wallpaper mapping
-WALLPAPER_MAP = {
-    'Clear': 'clear.jpg',
-    'Clouds': 'cloudy.jpg',
-    'Rain': 'rain.jpg',
-    'Drizzle': 'rain.jpg',
-    'Thunderstorm': 'storm.jpg',
-    'Snow': 'snow.jpg',
-    'Light Snow': 'snow.jpg',
-    'Moderate Snow': 'snow.jpg',
-    'Heavy Snow': 'snow.jpg',
-    'Sleet': 'snow.jpg',
-    'Hail': 'storm.jpg',
-    'Mist': 'fog.jpg',
-    'Fog': 'fog.jpg',
-    'Overcast': 'cloudy.jpg',
-    'Partly Cloudy': 'cloudy.jpg',
-    'Light Rain': 'rain.jpg',
-    'Moderate Rain': 'rain.jpg',
-    'Heavy Rain': 'rain.jpg',
-    'Showers': 'rain.jpg',
-    'Blizzard': 'snow.jpg',
-    'Freezing Rain': 'rain.jpg',
-    'Freezing Fog': 'fog.jpg',
-    'Patchy Rain Possible': 'rain.jpg',
-    'Patchy Snow Possible': 'snow.jpg',
+# Map weather conditions to wallpaper images
+wallpaper_map = {
+    'clear': 'clear.jpg',
+    'clouds': 'cloudy.jpg',
+    'rain': 'rain.jpg',
+    'drizzle': 'rain.jpg',
+    'thunderstorm': 'storm.jpg',
+    'snow': 'snow.jpg',
+    'light snow': 'snow.jpg',
+    'moderate snow': 'snow.jpg',
+    'heavy snow': 'snow.jpg',
+    'sleet': 'snow.jpg',
+    'hail': 'storm.jpg',
+    'mist': 'fog.jpg',
+    'fog': 'fog.jpg',
+    'overcast': 'cloudy.jpg',
+    'partly cloudy': 'cloudy.jpg',
+    'light rain': 'rain.jpg',
+    'moderate rain': 'rain.jpg',
+    'heavy rain': 'rain.jpg',
+    'showers': 'rain.jpg',
+    'blizzard': 'snow.jpg',
+    'freezing rain': 'rain.jpg',
+    'freezing fog': 'fog.jpg',
+    'patchy rain possible': 'rain.jpg',
+    'patchy snow possible': 'snow.jpg',
 }
 
-# Fetch weather data using wttr.in API
-def get_weather():
-    url = f'https://wttr.in/{CITY}?format=%C'
+# Fetch current weather condition
+def get_current_weather():
+    url = f'https://wttr.in/{city}?format=%C'
     response = requests.get(url)
-    if response.status_code == 200:
-        return response.text.strip()
-    return None
+    return response.text.strip().lower()
+
+# Set the wallpaper based on the given image path
+def set_desktop_wallpaper(image_path):
+    if os.name == 'nt':  # Windows
+        import ctypes
+        ctypes.windll.user32.SystemParametersInfoW(20, 0, str(image_path), 0)
+    elif os.name == 'posix':  # Linux and macOS
+        os.system(f'gsettings set org.gnome.desktop.background picture-uri file://{image_path}')
 
 # Main function
 def main():
-    weather = get_weather()
-    print(f"Weather condition: {weather}")
-    if weather in WALLPAPER_MAP:
-        print(f"Mapped wallpaper: {WALLPAPER_MAP[weather]}")
-    else:
-        print("No matching wallpaper found.")
+    weather = get_current_weather()
+    wallpaper_file = wallpaper_map.get(weather, 'clear.jpg')
+    wallpaper_path = wallpaper_dir / wallpaper_file
+
+    if wallpaper_path.exists():
+        set_desktop_wallpaper(wallpaper_path)
 
 if __name__ == "__main__":
     main()

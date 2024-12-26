@@ -19,11 +19,27 @@ WALLPAPER_MAP = {
     'Clear': 'clear.jpg',
     'Clouds': 'cloudy.jpg',
     'Rain': 'rain.jpg',
-    'Drizzle': 'drizzle.jpg',
+    'Drizzle': 'rain.jpg',
     'Thunderstorm': 'storm.jpg',
     'Snow': 'snow.jpg',
-    'Mist': 'mist.jpg',
+    'Light Snow': 'snow.jpg',
+    'Moderate Snow': 'snow.jpg',
+    'Heavy Snow': 'snow.jpg',
+    'Sleet': 'snow.jpg',
+    'Hail': 'storm.jpg',
+    'Mist': 'fog.jpg',
     'Fog': 'fog.jpg',
+    'Overcast': 'cloudy.jpg',
+    'Partly Cloudy': 'cloudy.jpg',
+    'Light Rain': 'rain.jpg',
+    'Moderate Rain': 'rain.jpg',
+    'Heavy Rain': 'rain.jpg',
+    'Showers': 'rain.jpg',
+    'Blizzard': 'snow.jpg',
+    'Freezing Rain': 'rain.jpg',
+    'Freezing Fog': 'fog.jpg',
+    'Patchy Rain Possible': 'rain.jpg',
+    'Patchy Snow Possible': 'snow.jpg',
 }
 
 # Fetch weather data using wttr.in API
@@ -37,6 +53,11 @@ def get_weather():
 # Main function
 def main():
     weather = get_weather()
+    print(f"Weather condition: {weather}")
+    if weather in WALLPAPER_MAP:
+        print(f"Mapped wallpaper: {WALLPAPER_MAP[weather]}")
+    else:
+        print("No matching wallpaper found.")
 
 if __name__ == "__main__":
     main()

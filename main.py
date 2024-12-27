@@ -2,6 +2,8 @@ import os
 import requests
 from pathlib import Path
 import geocoder
+import time
+from datetime import datetime
 
 # Get the user's location based on IP address
 def get_user_location():
@@ -20,11 +22,6 @@ wallpaper_map = {
     'drizzle': 'rain.jpg',
     'thunderstorm': 'storm.jpg',
     'snow': 'snow.jpg',
-    'light snow': 'snow.jpg',
-    'moderate snow': 'snow.jpg',
-    'heavy snow': 'snow.jpg',
-    'sleet': 'snow.jpg',
-    'hail': 'storm.jpg',
     'mist': 'fog.jpg',
     'fog': 'fog.jpg',
     'overcast': 'cloudy.jpg',
@@ -56,12 +53,15 @@ def set_desktop_wallpaper(image_path):
 
 # Main function
 def main():
-    weather = get_current_weather()
-    wallpaper_file = wallpaper_map.get(weather, 'clear.jpg')
-    wallpaper_path = wallpaper_dir / wallpaper_file
+    while True:
+        weather = get_current_weather()
+        wallpaper_file = wallpaper_map.get(weather, 'clear.jpg')
+        wallpaper_path = wallpaper_dir / wallpaper_file
 
-    if wallpaper_path.exists():
-        set_desktop_wallpaper(wallpaper_path)
+        if wallpaper_path.exists():
+            set_desktop_wallpaper(wallpaper_path)
+
+        time.sleep(1800)  # Wait for 30 minutes before updating again
 
 if __name__ == "__main__":
     main()
